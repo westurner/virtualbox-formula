@@ -1,0 +1,3 @@
+virtualbox:
+  lookup:
+    pkg: virtualbox-4.3

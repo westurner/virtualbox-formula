@@ -1,0 +1,7 @@
+
+{% set virtualbox = salt['grains.filter_by']({
+    'default': {
+        'pkg': 'virtualbox-4.3',
+        'service': 'vboxdrv',
+    },
+}, merge=salt['pillar.get']('virtualbox:lookup')) %}

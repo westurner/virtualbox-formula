@@ -1,20 +1,21 @@
 #  https://launchpad.net/~virtualbox-ppa/+archive/releases
 
-{% set dist = grains['oscodename'] %}
-{% set humanname = "virtualbox-releases-%s" % dist %}
-
 include:
   - virtualbox.host
 
-virtualbox:
+{% set dist = grains['oscodename'] %}
+{% set humanname = "virtualbox-releases-%s" % dist %}
+{% set repo_url = "http://download.virtualbox.org/virtualbox/debian" %}
+
+virtualbox-deb:
   pkgrepo.managed:
     - humanname: {{ humanname }}
-    - name: deb http://download.virtualbox.org/virtualbox/debian {{ dist }} contrib
+    - name: deb {{ repo_url }} {{ dist }} non-free contrib
     - comment: ""
     - dist: {{ dist }}
     - file: /etc/apt/sources.list.d/{{ humanname }}.list
-    #- keyid: D5056DDE  
-    #- keyserver: keyserver.ubuntu.com
+    #- keyid:
+    #- keyserver:
     - key_url: salt://virtualbox/files/oracle_vbox.asc
     #- gpgcheck: 1
     #- gpgkey: 
@@ -22,13 +23,12 @@ virtualbox:
       - pkg: virtualbox
 
 
-  pkg.latest:
+  pkg.installed:
     - pkgs:
       - linux-headers-{{ grains['kernelrelease'] }}
       - dkms
       - virtualbox-4.3
     - require:
-      - pkgrepo: virtualbox
+      - pkgrepo: virtualbox-deb
     - require_in:
       - pkg: virtualbox
-    #- refresh: True
